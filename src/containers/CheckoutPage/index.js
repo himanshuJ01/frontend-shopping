@@ -12,7 +12,9 @@ import Card from "../../components/UI/Card";
 import CartPage from "../CartPage";
 import AddressForm from "./AddressForm";
 
+
 import "./style.css";
+const Razorpay = require('razorpay');
 
 /**
  * @author
@@ -87,7 +89,7 @@ const Address = ({
             withoutLayout={true}
             onSubmitForm={onAddressSubmit}
             initialData={adr}
-            onCancel={() => {}}
+            onCancel={() => { }}
           />
         )}
       </div>
@@ -108,6 +110,35 @@ const CheckoutPage = (props) => {
   const [confirmOrder, setConfirmOrder] = useState(false);
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
+
+
+  const DigitalPayment =  () =>{
+  
+    var options = {
+      key: "rzp_test_XxDKZy0fvNletW", // Enter the Key ID generated from the Dashboard
+      amount: "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      currency: "INR",
+      name: "Flipkart-Clone",
+      description: "Test Transaction",
+      image: "https://example.com/your_logo",
+    //order_id: "order_9A33XWu170gUtm", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      handler: function (response){
+          alert(response.razorpay_payment_id);
+          alert(response.razorpay_order_id);
+          alert(response.razorpay_signature)
+      },
+      prefill: {
+          "name": "Himanshu Janbandhu",
+          "email": "xyxy.com",
+          "contact": "9999999999"
+      },
+      
+  }
+    const rzp1 = new window.Razorpay(options);
+  
+     rzp1.open();
+  };
+  
 
   const onAddressSubmit = (addr) => {
     setSelectedAddress(addr);
@@ -150,7 +181,7 @@ const CheckoutPage = (props) => {
         const { price, qty } = cart.cartItems[key];
         return totalPrice + price * qty;
       },
-      0
+       0
     );
     const items = Object.keys(cart.cartItems).map((key) => ({
       productId: key,
@@ -238,7 +269,7 @@ const CheckoutPage = (props) => {
 
           {/* AddressForm */}
           {confirmAddress ? null : newAddress ? (
-            <AddressForm onSubmitForm={onAddressSubmit} onCancel={() => {}} />
+            <AddressForm onSubmitForm={onAddressSubmit} onCancel={() => { }} />
           ) : auth.authenticate ? (
             <CheckoutStep
               stepNumber={"+"}
@@ -316,7 +347,27 @@ const CheckoutPage = (props) => {
                       margin: "0 0 20px 20px",
                     }}
                   />
+                  <div
+                    className="flexRow"
+                    style={{
+                      alignItems: "center",
+                      padding: "20px",
+                    }}
+                  >
+                    <input type="radio" name="paymentOption" value="digitalPayment" onClick={DigitalPayment} />
+                    <div>DigitalPayment</div>
+                  </div>
+                  <MaterialButton
+                    title="CONFIRM ORDER"
+                    onClick={onConfirmOrder}
+                    style={{
+                      width: "200px",
+                      margin: "0 0 20px 20px",
+                    }}
+                  />
                 </div>
+                
+                
               )
             }
           />
