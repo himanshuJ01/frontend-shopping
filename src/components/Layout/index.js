@@ -1,5 +1,4 @@
 import React from 'react';
-import Carousel from '../Carousel';
 import Header from '../Header';
 import MenuHeader from '../MenuHeader';
 
@@ -14,7 +13,7 @@ function Layout(props) {
     <>
         <Header />
         <MenuHeader />
-        <Carousel />
+        
         {props.children}
     </>
    )
